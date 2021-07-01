@@ -15,6 +15,12 @@ Modellizzare la struttura di una tabella per memorizzare tutti i dati riguardant
 - modalita_di_accesso
 - sede
 
+## (table) laurea:
+- id
+- nome
+- materie
+- inizio
+
 ## (table) corsi:
 - id
 - nome 
