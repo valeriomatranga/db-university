@@ -24,7 +24,8 @@
 ## Seleziona tutti gli appelli d'esame che avvengono nel pomeriggio (dopo le 14) del 20/06/2020 (21)
 - SELECT *
 - FROM `exams`
-- WHERE HOUR(`hour`) > 14 AND `date` = '2020-06-20'
+- WHERE HOUR(`hour`) >= 14 
+- AND `date` = '2020-06-20'
 
 ## Seleziona tutti i corsi di laurea magistrale (38)
 - SELECT *
@@ -40,3 +41,58 @@
 - FROM `teachers`
 - WHERE `phone`
 - IS null
+
+## GROUP BY:
+
+## Contare quanti iscritti ci sono stati ogni anno
+- SELECT COUNT(*) AS 'iscritti', YEAR(`enrolment_date`) AS 'anno di iscrizione'
+- FROM `students`
+- GROUP BY YEAR(`enrolment_date`);
+
+## Contare gli insegnanti che hanno l'ufficio nello stesso edificio
+- SELECT COUNT(*) AS 'N.Insegnanti', `office_number` AS 'Ufficio N.' 
+- FROM `teachers`
+- GROUP BY `office_number`;
+
+## Calcolare la media dei voti di ogni appello d'esame
+- SELECT AVG(`vote`) AS 'voto medio esame', `exam_id` AS 'esame'
+- FROM `exam_student`
+- GROUP BY `exam_id`;
+
+## Contare quanti corsi di laurea ci sono per ogni dipartimento
+- SELECT COUNT(*) AS 'numero corsi', `department_id` AS 'dipartimento'
+- FROM `degrees`
+- GROUP BY `department_id`;
+
+
+## JOINS:
+
+## Selezionare tutti gli studenti iscritti al Corso di Laurea in Economia
+- SELECT `students`.`id`,`students`.`degree_id` as 'laurea in economia',`students`.`name`, `students`.`surname`,`students`.`date_of_birth`,`students`.`fiscal_code`,   `students`.`enrolment_date`,`students`.`registration_number`,`students`.`email`
+- FROM `students`
+- JOIN `degrees`
+- ON `students` . `degree_id` = `degree_id`
+- WHERE degrees.name = 'Corso di Laurea in Economia';
+
+## Selezionare tutti i Corsi di Laurea del Dipartimento di Neuroscienze
+- SELECT `degrees`.`id` AS 'ID: Laurea',`degrees`.`department_id` AS 'ID: dipartimento',`degrees`.`name`,`degrees`.`level`,`degrees`.`address`,`degrees`.`email`,`degrees`.`website`
+- FROM `degrees`
+- JOIN `departments`
+- ON `degrees`.`department_id` = `department_id`
+- WHERE departments.name = 'Dipartimento di Neuroscienze';
+
+## Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
+- SELECT `course_teacher`.`course_id`,`course_teacher`.`teacher_id`,`teachers`.`name`,`teachers`.`surname`,`teachers`.`phone`,`teachers`.`email`,`teachers`.`office_address`,`teachers`.`office_number`
+- FROM `course_teacher`
+- JOIN `teachers`
+- ON `course_teacher`.`teacher_id`= `teacher_id`
+- WHERE `teachers`.`id`= 44;
+
+## Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e il relativo dipartimento, in ordine alfabetico per cognome e nome
+- SELECT `students`.`id` AS 'ID Studente',`students`.`degree_id`,`students`.`name`,`students`.`surname`,`degrees`.`department_id`,`degrees`.`name`,`degrees`.`level`
+- FROM `students`
+- JOIN `degrees`
+- ON `students`.`degree_id`= `degree_id`
+- JOIN `departments`
+- ON `degrees`.`department_id`= department_id
+- ORDER by `students`.`surname` ASC;
